@@ -1,0 +1,69 @@
+import { APP_ROOT, IS_PRODUCTION } from '../../constats';
+import PodmanApi from '../../podman/PodmanApi';
+
+export default class PodmanEnvironment {
+  private readonly podmanApi: PodmanApi;
+  private readonly runningContainerIds: string[] = [];
+
+  constructor(podmanApi: PodmanApi) {
+    this.podmanApi = podmanApi;
+  }
+
+  async runBuilderInOwnContainer(builderName: string, builderArgs: Map<string, string>): Promise<void> {
+    //    console.log('Pulling image...');
+    //    const imageId = await this.podmanApi.pullImage('minecraft-artifact-builder:latest', 'missing');  // FIXME: Remove debugging policy=missing
+
+    console.log(['npx', 'ts-node', 'src/main.ts', 'builder', builderName, '--builderArg', ...Array.from(builderArgs.entries()).map(([key, value]) => `${key}=${value}`)].join(' '));
+
+    console.log('Creating container...');
+    const containerId = await this.podmanApi.createContainer({
+      image: 'minecraft-artifact-builder:latest',
+      //      user: 'node', // FIXME: socket permission denied
+      command: IS_PRODUCTION ? ['node', '--enable-source-maps', 'dist/main.js'] : ['npx', 'ts-node', 'src/main.ts', 'builder', builderName, '--builderArg', ...Array.from(builderArgs.entries()).map(([key, value]) => `${key}=${value}`)],
+      work_dir: '/app',
+      mounts: [
+        {
+          type: 'bind',
+          source: APP_ROOT,
+          destination: '/app/',
+          options: ['ro']
+        },
+        {
+          type: 'bind',
+          source: '/home/christian/Downloads/_minecraft-artifacts-builder/spigot/',
+          destination: '/artifact_out/',
+          options: ['rw']
+        },
+        {
+          type: 'bind',
+          source: '/run/user/1000/podman/podman.sock',
+          destination: '/run/user/1000/podman/podman.sock',
+          options: ['ro']
+        }
+      ],
+      volatile: true,
+      no_new_privileges: true,
+      //      read_only_filesystem: true,
+      labels: { 'dev.sprax.minecraft-artifact-builder': '1' }
+    });
+
+    console.log('Starting container...');
+    this.runningContainerIds.push(containerId);
+    await this.podmanApi.startContainer(containerId);
+
+    console.log('Waiting for container to finish...');
+    const exitCode = await this.podmanApi.waitOnContainer(containerId, ['exited']);
+    if (exitCode !== 0) {
+      throw new Error(`Container exited with exit code ${exitCode}: ${await this.podmanApi.getContainerLogs(containerId)}`);
+    }
+
+    await this.podmanApi.deleteContainer(containerId);
+    this.runningContainerIds.splice(this.runningContainerIds.indexOf(containerId), 1);
+  }
+
+  async abortRunningBuilders(): Promise<void> {
+    for (const containerId of this.runningContainerIds) {
+      await this.podmanApi.deleteContainer(containerId, true, true);
+    }
+  }
+}

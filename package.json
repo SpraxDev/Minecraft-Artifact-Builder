@@ -24,7 +24,7 @@
     "build": "tsc",
 
     "test": "jest --coverage",
-    "dev": "nodemon src/main.ts",
+    "dev": "nodemon src/main.ts app",
 
     "docker:build": "npm run build && docker build --rm --tag minecraft-artifact-builder:dev .",
     "docker:dev": "npm run docker:build && (docker stop minecraft-artifact-builder;docker rm minecraft-artifact-builder;echo '') && docker run --name minecraft-artifact-builder --cpus 2 --memory 512M --volume minecraft-artifact-builder:/app/storage/ minecraft-artifact-builder:dev"
@@ -43,5 +43,9 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/yargs": "^17.0.32",
+    "yargs": "^17.7.2"
   }
 }

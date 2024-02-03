@@ -1,0 +1,15 @@
+FROM docker.io/library/node:20-alpine
+
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+
+RUN apk add --no-cache --update \
+    bash \
+    curl \
+    git \
+    jq \
+    tar \
+    unzip \
+    wget \
+    zip
+
+CMD ["node", "--version"]
