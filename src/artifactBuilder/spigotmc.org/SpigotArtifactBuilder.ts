@@ -14,6 +14,174 @@ type SpigotBuildArgKeys = 'version' | 'remapped' | string;
 export default class SpigotArtifactBuilder extends ArtifactBuilder {
   private static readonly BUILD_TOOLS_URL = 'https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar';
 
+  private static readonly KNOWN_BROKEN_VERSIONS = [
+    '3316', // Could not find artifact org.yaml:snakeyaml:jar:1.30-SNAPSHOT
+    '1082', // Could not find artifact net.md-5:bungeecord-chat:jar:1.10-SNAPSHOT
+    '888',  // Could not find artifact org.spigotmc:minecraft-server:jar:1.10-SNAPSHOT
+    '887', // Could not find artifact org.spigotmc:minecraft-server:jar:1.10-SNAPSHOT
+
+    // ref no longer exists
+    '3858',
+    '3428',
+    '3321',
+    '3299',
+    '2970',
+    '2839',
+    '2813',
+    '2754',
+    '2573',
+    '2442',
+    '2416',
+    '2415',
+    '2119',
+    '2075',
+    '2063',
+    '2062',
+    '2055',
+    '1997',
+    '1916',
+    '1866',
+    '1764',
+    '1760',
+    '1759',
+    '1704',
+    '1656',
+    '1655',
+    '1593',
+    '1592',
+    '1587',
+    '1519',
+    '1494',
+    '1354',
+    '1357',
+    '1080',
+    '1014',
+    '944',
+    '985',
+    '943',
+    '934',
+    '860',
+    '760',
+    '757',
+    '756',
+    '755',
+    '773',
+    '772',
+    '712',
+    '674',
+    '486',
+    '469',
+    '435',
+
+    // java.io.FileNotFoundException: BuildData/info.json (No such file or directory)
+    '334',
+    '333',
+    '332',
+    '331',
+    '330',
+    '328',
+    '327',
+    '326',
+    '325',
+    '324',
+    '323',
+    '320',
+    '319',
+    '318',
+    '317',
+    '315',
+    '312',
+    '311',
+    '309',
+    '308',
+    '307',
+    '306',
+    '305',
+    '304',
+    '303',
+    '302',
+    '301',
+    '300',
+    '299',
+    '298',
+    '297',
+    '296',
+    '295',
+    '294',
+    '293',
+    '292',
+    '291',
+    '290',
+    '289',
+    '288',
+    '287',
+    '286',
+    '285',
+    '284',
+    '282',
+    '281',
+    '278',
+    '277',
+    '273',
+    '272',
+    '271',
+    '270',
+    '269',
+    '268',
+    '264',
+    '263',
+    '262',
+    '259',
+    '258',
+    '256',
+    '255',
+    '254',
+    '253',
+
+    // stack overflow?
+    '340',
+    '338',
+    '336',
+    '335',
+
+    // patches don't apply cleanly
+    '3186',
+    '3185',
+    '3184',
+    '2399',
+    '357',
+    '356',
+    '355',
+
+    // Error compiling Spigot maven-module: There are test failures
+    '1450',
+    '1449',
+    '1448',
+    '1447',
+    '1446',
+    '1445',
+    '1444',
+    '1443',
+    '1442',
+    '1441',
+    '1440',
+    '1439',
+    '1438',
+    '1437',
+    '1436',
+    '1435',
+    '1434',
+    '1433',
+    '1432',
+    '1431',
+    '1430',
+    '1428',
+    '1427',
+    '1426',
+    '1423',
+    '1422'
+  ];
+
   async getKnownVersions(): Promise<string[]> {
     const response = await fetch('https://hub.spigotmc.org/versions/');
     if (!response.ok) {
@@ -26,7 +194,10 @@ export default class SpigotArtifactBuilder extends ArtifactBuilder {
     for (const match of matches) {
       const version = match[1];
       if (version.endsWith('json')) {
-        versions.push(version.substring(0, version.length - 5));
+        const versionName = version.substring(0, version.length - 5);
+        if (!SpigotArtifactBuilder.KNOWN_BROKEN_VERSIONS.includes(versionName)) {
+          versions.push(versionName);
+        }
       }
     }
 

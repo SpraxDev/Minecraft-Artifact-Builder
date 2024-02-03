@@ -5,7 +5,7 @@ import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
 import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder';
 import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder';
 import PurpurArtifactBuilder from './purpurmc.org/PurpurArtifactBuilder';
-import SpigotArtifactBuilder from './spigot/SpigotArtifactBuilder';
+import SpigotArtifactBuilder from './spigotmc.org/SpigotArtifactBuilder';
 
 export default class ArtifactBuilderRegistry {
   private readonly builders: Map<string, ArtifactBuilder> = new Map();
