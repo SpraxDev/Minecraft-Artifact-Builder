@@ -4,6 +4,7 @@ import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder';
 import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
 import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder';
 import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder';
+import PurpurArtifactBuilder from './purpurmc.org/PurpurArtifactBuilder';
 import SpigotArtifactBuilder from './spigot/SpigotArtifactBuilder';
 
 export default class ArtifactBuilderRegistry {
@@ -17,6 +18,8 @@ export default class ArtifactBuilderRegistry {
     this.register('papermc.io/travertine', new TravertineArtifactBuilder());
     this.register('papermc.io/velocity', new VelocityArtifactBuilder());
     this.register('papermc.io/waterfall', new WaterfallArtifactBuilder());
+
+    this.register('purpurmc.org/purpur', new PurpurArtifactBuilder());
   }
 
   register(name: string, builder: ArtifactBuilder): void {

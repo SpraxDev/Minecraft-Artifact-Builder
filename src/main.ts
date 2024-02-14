@@ -115,7 +115,8 @@ if (argv._.length === 0) {
         async () => await buildAllVersionsOfSomething('papermc.io/waterfall', 'Waterfall', 2, true),
         async () => await buildAllVersionsOfSomething('papermc.io/folia', 'Folia', 2, true),
         async () => await buildAllVersionsOfSomething('papermc.io/travertine', 'Travertine', 2, true)
-      ], 1)
+      ], 1),
+      buildAllVersionsOfSomething('purpurmc.org/purpur', 'Purpur', 2, true)
     ]);
     console.log('All done');
     process.exit(0);

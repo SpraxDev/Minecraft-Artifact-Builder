@@ -75,8 +75,10 @@ export default class PodmanEnvironment {
   }
 
   async abortRunningBuilders(): Promise<void> {
+    const promises: Promise<unknown>[] = [];
     for (const containerId of this.runningContainerIds) {
-      await this.podmanApi.deleteContainer(containerId, true, true);
+      promises.push(this.podmanApi.deleteContainer(containerId, true, true));
     }
+    await Promise.all(promises);
   }
 }
