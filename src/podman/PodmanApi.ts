@@ -1,7 +1,4 @@
 import ChildProcess from 'node:child_process';
-import Crypto from 'node:crypto';
-import Fs from 'node:fs';
-import Os from 'node:os';
 import Path from 'node:path';
 import HttpUnixSocketClient from './HttpUnixSocketClient';
 
@@ -26,12 +23,8 @@ export type ContainerCondition =
   | 'stopping'
   | 'unhealthy';
 
-export type ContainerMount = {
-  type: 'bind';
-  source: string;
-  destination: string;
-  options: string[];
-}
+export type ContainerMount = { type: 'bind', source: string, destination: string, options: string[] }
+                             | { type: 'tmpfs', destination: string };
 
 export type OverlayVolume = {
   source: string;

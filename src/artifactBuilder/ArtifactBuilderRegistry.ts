@@ -1,11 +1,22 @@
 import ArtifactBuilder from './ArtifactBuilder';
+import FoliaArtifactBuilder from './papermc.io/FoliaArtifactBuilder';
+import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder';
+import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
+import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder';
+import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder';
 import SpigotArtifactBuilder from './spigot/SpigotArtifactBuilder';
 
 export default class ArtifactBuilderRegistry {
   private readonly builders: Map<string, ArtifactBuilder> = new Map();
 
   constructor() {
-    this.register('spigot', new SpigotArtifactBuilder());
+    this.register('spigotmc.org/spigot', new SpigotArtifactBuilder());
+
+    this.register('papermc.io/folia', new FoliaArtifactBuilder());
+    this.register('papermc.io/paper', new PaperArtifactBuilder());
+    this.register('papermc.io/travertine', new TravertineArtifactBuilder());
+    this.register('papermc.io/velocity', new VelocityArtifactBuilder());
+    this.register('papermc.io/waterfall', new WaterfallArtifactBuilder());
   }
 
   register(name: string, builder: ArtifactBuilder): void {

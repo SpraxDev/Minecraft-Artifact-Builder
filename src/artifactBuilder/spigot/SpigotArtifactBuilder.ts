@@ -11,7 +11,7 @@ import VersionInfo from './VersionInfo';
 
 type SpigotBuildArgKeys = 'version' | 'remapped' | string;
 
-export default class SpigotArtifactBuilder implements ArtifactBuilder {
+export default class SpigotArtifactBuilder extends ArtifactBuilder {
   private static readonly BUILD_TOOLS_URL = 'https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar';
 
   async getKnownVersions(): Promise<string[]> {
@@ -98,19 +98,23 @@ export default class SpigotArtifactBuilder implements ArtifactBuilder {
     await Fs.promises.copyFile(artifactPath, Path.join(context.outputDirectory, `${await this.extractSpigotVersionString(jdk, artifactPath)} [${version}].jar`));
   }
 
-  async artifactAlreadyInOutputDir(context: Pick<Readonly<BuildContext>, 'outputDirectory'>, args: Map<string, string>): Promise<boolean | null> {
-    const version = args.get('version');
-    if (version == null) {
-      throw new Error('version argument is not provided');
-    }
-    if (version == 'latest') {
-      return null;
-    }
-
-    // TODO: Wenn version einen Punkt hat, zusätzlich mal das JSON abfragen und schauen, ob es die build-nummer ebenfalls gibt bzw. sogar content-hash vergleichen dann?
+  async artifactAlreadyInOutputDirBulk(context: Pick<BuildContext, 'outputDirectory'>, args: Map<string, string>[]): Promise<(boolean | null)[]> {
+    const versionsToCheck = args.map((arg) => {
+      const version = arg.get('version');
+      if (version == null) {
+        throw new Error('version argument is not provided');
+      }
+      return version;
+    });
 
     const filesInOutputDir = await Fs.promises.readdir(context.outputDirectory, { withFileTypes: true });
-    return filesInOutputDir.some((fileName) => fileName.isFile() && fileName.name.endsWith(` [${version}].jar`));
+    return versionsToCheck.map((version) => {
+      if (version == 'latest') {
+        return null;
+      }
+
+      return filesInOutputDir.some((fileName) => fileName.isFile() && fileName.name.endsWith(` [${version}].jar`));
+    });
   }
 
   private async fetchVersionInfo(version: string): Promise<VersionInfo | null> {
