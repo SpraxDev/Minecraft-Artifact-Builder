@@ -93,7 +93,7 @@ if (argv._.length === 0) {
       });
     }
 
-    console.log(`${artifactBuilderName}: Skipping ${numberOfAlreadyBuiltVersions} already built versions`);
+    console.log(`${artifactBuilderName}: Skipping ${numberOfAlreadyBuiltVersions} already processed versions`);
     if (buildTasks.length > 0) {
       await Async.parallelLimit(buildTasks, workerCount);
     }
