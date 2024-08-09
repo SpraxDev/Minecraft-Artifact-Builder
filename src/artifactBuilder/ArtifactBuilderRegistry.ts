@@ -1,4 +1,5 @@
 import ArtifactBuilder from './ArtifactBuilder';
+import MojangArtifactBuilder from './mojang.com/MojangArtifactBuilder';
 import FoliaArtifactBuilder from './papermc.io/FoliaArtifactBuilder';
 import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder';
 import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
@@ -22,7 +23,9 @@ export default class ArtifactBuilderRegistry {
 
     this.register('purpurmc.org/purpur', new PurpurArtifactBuilder());
 
-    this.register('pufferfish.host', new PufferfischArtifactBuilder())
+    this.register('pufferfish.host', new PufferfischArtifactBuilder());
+
+    this.register('mojang.com', new MojangArtifactBuilder());
   }
 
   register(name: string, builder: ArtifactBuilder): void {
