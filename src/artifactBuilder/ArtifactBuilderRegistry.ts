@@ -4,6 +4,7 @@ import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder';
 import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
 import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder';
 import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder';
+import PufferfischArtifactBuilder from './pufferfish.host/PufferfischArtifactBuilder';
 import PurpurArtifactBuilder from './purpurmc.org/PurpurArtifactBuilder';
 import SpigotArtifactBuilder from './spigotmc.org/SpigotArtifactBuilder';
 
@@ -20,6 +21,8 @@ export default class ArtifactBuilderRegistry {
     this.register('papermc.io/waterfall', new WaterfallArtifactBuilder());
 
     this.register('purpurmc.org/purpur', new PurpurArtifactBuilder());
+
+    this.register('pufferfish.host', new PufferfischArtifactBuilder())
   }
 
   register(name: string, builder: ArtifactBuilder): void {
