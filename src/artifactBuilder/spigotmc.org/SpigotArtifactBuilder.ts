@@ -145,6 +145,7 @@ export default class SpigotArtifactBuilder extends ArtifactBuilder {
     '335',
 
     // patches don't apply cleanly
+    '4282',
     '3186',
     '3185',
     '3184',
