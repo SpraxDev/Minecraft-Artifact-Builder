@@ -145,6 +145,7 @@ export default class SpigotArtifactBuilder extends ArtifactBuilder {
     '335',
 
     // patches don't apply cleanly
+    '4464',
     '4282',
     '3186',
     '3185',
@@ -180,7 +181,10 @@ export default class SpigotArtifactBuilder extends ArtifactBuilder {
     '1427',
     '1426',
     '1423',
-    '1422'
+    '1422',
+
+    // When calling it with --version: Declared library junit-platform-commons-1.10.2.jar not found
+    '4325'
   ];
 
   async getKnownVersions(): Promise<string[]> {
