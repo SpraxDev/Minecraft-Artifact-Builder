@@ -6,6 +6,7 @@ import FileDownloader from '../FileDownloader';
 import Jdk from './Jdk';
 
 export default class JdkProvider {
+  // https://javaalmanac.io/bytecode/versions/
   public static readonly CLASS_VERSION_TO_JDK_VERSION: { [majorClassVersion: number]: number } = {
     51: 7,
     52: 8,
@@ -23,18 +24,22 @@ export default class JdkProvider {
     64: 20,
     65: 21,
     66: 22,
-    67: 23
+    67: 23,
+    68: 24,
+    69: 25,
+    70: 26,
   };
 
   private static readonly ECLIPSE_TEMURIN_JDKS: { [jdkVersion: number]: string } = {
-    21: `https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_21.0.2_13.tar.gz`,
+    25: `https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25%2B36/OpenJDK25U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_25_36.tar.gz`,
+    21: `https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_21.0.8_9.tar.gz`,
     20: `https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_20.0.2_9.tar.gz`,
     19: `https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_19.0.2_7.tar.gz`,
     18: `https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_18.0.2.1_1.tar.gz`,
-    17: `https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10%2B7/OpenJDK17U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_17.0.10_7.tar.gz`,
+    17: `https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_17.0.16_8.tar.gz`,
     16: `https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_16.0.2_7.tar.gz`,
-    11: `https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.22%2B7/OpenJDK11U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_11.0.22_7.tar.gz`,
-    8: `https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u402-b06/OpenJDK8U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_8u402b06.tar.gz`
+    11: `https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.28%2B6/OpenJDK11U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_11.0.28_6.tar.gz`,
+    8: `https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u462-b08/OpenJDK8U-jdk_${Os.arch()}_${JdkProvider.isRunningOnAlpineLinux() ? 'alpine-' : ''}linux_hotspot_8u462b08.tar.gz`,
   };
 
   // TODO: refactor
@@ -61,7 +66,7 @@ export default class JdkProvider {
         ['-xf', jdkTarPath, '--strip-components=1'],
         {
           cwd: jdkDir,
-          stdio: ['ignore', 'inherit', 'inherit']
+          stdio: ['ignore', 'inherit', 'inherit'],
         });
 
       tarProcess.on('exit', (code) => {
