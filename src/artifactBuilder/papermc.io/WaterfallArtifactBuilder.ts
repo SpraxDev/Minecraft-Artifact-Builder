@@ -1,4 +1,4 @@
-import AbstractPaperMcIoArtifactBuilder from './AbstractPaperMcIoArtifactBuilder';
+import AbstractPaperMcIoArtifactBuilder from './AbstractPaperMcIoArtifactBuilder.ts';
 
 export default class WaterfallArtifactBuilder extends AbstractPaperMcIoArtifactBuilder {
   getApiProjectName(): string {

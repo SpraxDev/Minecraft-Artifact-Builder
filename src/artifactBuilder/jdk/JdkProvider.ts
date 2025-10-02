@@ -2,8 +2,8 @@ import ChildProcess from 'node:child_process';
 import Fs from 'node:fs';
 import Os from 'node:os';
 import Path from 'node:path';
-import FileDownloader from '../FileDownloader';
-import Jdk from './Jdk';
+import FileDownloader from '../FileDownloader.ts';
+import type Jdk from './Jdk.ts';
 
 export default class JdkProvider {
   // https://javaalmanac.io/bytecode/versions/

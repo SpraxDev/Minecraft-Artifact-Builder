@@ -1,5 +1,5 @@
-import { APP_ROOT, IS_PRODUCTION } from '../../constats';
-import PodmanApi from '../../podman/PodmanApi';
+import { APP_ROOT, IS_PRODUCTION } from '../../constats.ts';
+import PodmanApi from '../../podman/PodmanApi.ts';
 
 export default class PodmanEnvironment {
   private readonly podmanApi: PodmanApi;
@@ -17,7 +17,7 @@ export default class PodmanEnvironment {
     const containerId = await this.podmanApi.createContainer({
       image: 'minecraft-artifact-builder:latest',
       //      user: 'node', // FIXME: socket permission denied
-      command: IS_PRODUCTION ? ['node', '--enable-source-maps', 'dist/main.js'] : ['npx', 'ts-node', 'src/main.ts', 'builder', builderName, '--builderArg', ...Array.from(builderArgs.entries()).map(([key, value]) => `${key}=${value}`)],
+      command: IS_PRODUCTION ? ['node', '--enable-source-maps', 'dist/main.js'] : ['node', 'src/main.ts', 'builder', builderName, '--builderArg', ...Array.from(builderArgs.entries()).map(([key, value]) => `${key}=${value}`)],
       work_dir: '/app',
       mounts: [
         {

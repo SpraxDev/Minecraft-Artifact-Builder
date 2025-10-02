@@ -1,4 +1,4 @@
-import AbstractPaperMcIoArtifactBuilder, { type ProjectBuild } from './AbstractPaperMcIoArtifactBuilder';
+import AbstractPaperMcIoArtifactBuilder, { type ProjectBuild } from './AbstractPaperMcIoArtifactBuilder.ts';
 
 export default class PaperArtifactBuilder extends AbstractPaperMcIoArtifactBuilder {
   private static readonly KNOWN_BROKEN_VERSIONS = [

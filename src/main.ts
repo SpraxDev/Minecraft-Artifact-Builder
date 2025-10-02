@@ -4,9 +4,9 @@ import Fs from 'node:fs';
 import Os from 'node:os';
 import Path from 'node:path';
 import Yargs from 'yargs/yargs';
-import PodmanEnvironment from './artifactBuilder/env/PodmanEnvironment';
-import { APP_ROOT, getArtifactBuilderRegistry } from './constats';
-import PodmanApi from './podman/PodmanApi';
+import PodmanEnvironment from './artifactBuilder/env/PodmanEnvironment.ts';
+import { APP_ROOT, getArtifactBuilderRegistry } from './constats.ts';
+import PodmanApi from './podman/PodmanApi.ts';
 
 const yargs = Yargs(process.argv.slice(2))
   .command('app', 'Start the main app / web interface')

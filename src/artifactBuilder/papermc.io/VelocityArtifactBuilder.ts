@@ -1,4 +1,4 @@
-import AbstractPaperMcIoArtifactBuilder from './AbstractPaperMcIoArtifactBuilder';
+import AbstractPaperMcIoArtifactBuilder from './AbstractPaperMcIoArtifactBuilder.ts';
 
 export default class VelocityArtifactBuilder extends AbstractPaperMcIoArtifactBuilder {
   getApiProjectName(): string {

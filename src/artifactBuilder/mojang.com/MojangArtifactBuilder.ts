@@ -1,9 +1,9 @@
 import Fs from 'node:fs';
 import Path from 'node:path';
-import ArtifactBuilder from '../ArtifactBuilder';
-import BuildContext from '../BuildContext';
-import FileDownloader from '../FileDownloader';
-import { MojangVersionInfo } from './MojangVersionInfo';
+import ArtifactBuilder from '../ArtifactBuilder.ts';
+import type BuildContext from '../BuildContext.ts';
+import FileDownloader from '../FileDownloader.ts';
+import type { MojangVersionInfo } from './MojangVersionInfo.ts';
 
 export default class MojangArtifactBuilder extends ArtifactBuilder {
   async getKnownVersions(): Promise<string[]> {

@@ -1,4 +1,4 @@
-import BuildContext from './BuildContext';
+import type BuildContext from './BuildContext.ts';
 
 export default abstract class ArtifactBuilder {
   abstract getKnownVersions(): Promise<string[]>;

@@ -1,8 +1,10 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "outDir": "./dist"
+    "noEmit": true,
+
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
     "src/**/*.ts"

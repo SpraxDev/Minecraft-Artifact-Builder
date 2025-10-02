@@ -1,13 +1,13 @@
-import ArtifactBuilder from './ArtifactBuilder';
-import MojangArtifactBuilder from './mojang.com/MojangArtifactBuilder';
-import FoliaArtifactBuilder from './papermc.io/FoliaArtifactBuilder';
-import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder';
-import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder';
-import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder';
-import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder';
-import PufferfischArtifactBuilder from './pufferfish.host/PufferfischArtifactBuilder';
-import PurpurArtifactBuilder from './purpurmc.org/PurpurArtifactBuilder';
-import SpigotArtifactBuilder from './spigotmc.org/SpigotArtifactBuilder';
+import ArtifactBuilder from './ArtifactBuilder.ts';
+import MojangArtifactBuilder from './mojang.com/MojangArtifactBuilder.ts';
+import FoliaArtifactBuilder from './papermc.io/FoliaArtifactBuilder.ts';
+import PaperArtifactBuilder from './papermc.io/PaperArtifactBuilder.ts';
+import TravertineArtifactBuilder from './papermc.io/TravertineArtifactBuilder.ts';
+import VelocityArtifactBuilder from './papermc.io/VelocityArtifactBuilder.ts';
+import WaterfallArtifactBuilder from './papermc.io/WaterfallArtifactBuilder.ts';
+import PufferfischArtifactBuilder from './pufferfish.host/PufferfischArtifactBuilder.ts';
+import PurpurArtifactBuilder from './purpurmc.org/PurpurArtifactBuilder.ts';
+import SpigotArtifactBuilder from './spigotmc.org/SpigotArtifactBuilder.ts';
 
 export default class ArtifactBuilderRegistry {
   private readonly builders: Map<string, ArtifactBuilder> = new Map();

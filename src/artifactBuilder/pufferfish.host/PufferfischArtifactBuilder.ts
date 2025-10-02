@@ -1,8 +1,8 @@
 import Fs from 'node:fs';
 import Path from 'node:path';
-import ArtifactBuilder from '../ArtifactBuilder';
-import BuildContext from '../BuildContext';
-import FileDownloader from '../FileDownloader';
+import ArtifactBuilder from '../ArtifactBuilder.ts';
+import type BuildContext from '../BuildContext.ts';
+import FileDownloader from '../FileDownloader.ts';
 
 export default class PufferfischArtifactBuilder extends ArtifactBuilder {
   private readonly API_BASE_URL = 'https://ci.pufferfish.host';

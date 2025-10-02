@@ -2,12 +2,12 @@ import ChildProcess from 'node:child_process';
 import Fs from 'node:fs';
 import Os from 'node:os';
 import Path from 'node:path';
-import ArtifactBuilder from '../ArtifactBuilder';
-import BuildContext from '../BuildContext';
-import FileDownloader from '../FileDownloader';
-import Jdk from '../jdk/Jdk';
-import JdkProvider from '../jdk/JdkProvider';
-import VersionInfo from './VersionInfo';
+import ArtifactBuilder from '../ArtifactBuilder.ts';
+import type BuildContext from '../BuildContext.ts';
+import FileDownloader from '../FileDownloader.ts';
+import type Jdk from '../jdk/Jdk.ts';
+import JdkProvider from '../jdk/JdkProvider.ts';
+import type VersionInfo from './VersionInfo.ts';
 
 type SpigotBuildArgKeys = 'version' | 'remapped' | string;
 

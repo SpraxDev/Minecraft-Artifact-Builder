@@ -1,6 +1,6 @@
 import ChildProcess from 'node:child_process';
 import Path from 'node:path';
-import HttpUnixSocketClient from './HttpUnixSocketClient';
+import HttpUnixSocketClient from './HttpUnixSocketClient.ts';
 
 export type LibPodPingResponse = {
   apiVersion: string;

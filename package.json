@@ -19,11 +19,12 @@
   "bugs": {
     "url": "https://github.com/SpraxDev/Minecraft-Artifact-Builder/issues"
   },
-  "main": "dist/main.js",
+  "main": "src/main.ts",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "dev": "node --watch src/main.ts app",
 
-    "dev": "nodemon src/main.ts app",
+    "test": "tsc",
 
     "docker:build": "npm run build && docker build --rm --tag minecraft-artifact-builder:dev .",
     "docker:dev": "npm run docker:build && (docker stop minecraft-artifact-builder;docker rm minecraft-artifact-builder;echo '') && docker run --name minecraft-artifact-builder --cpus 2 --memory 512M --volume minecraft-artifact-builder:/app/storage/ minecraft-artifact-builder:dev"
@@ -41,8 +42,6 @@
     "@types/async": "^3.2.25",
     "@types/node": "^24.6.2",
     "@types/yargs": "^17.0.33",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
 }
