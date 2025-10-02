@@ -207,8 +207,8 @@ export default class PodmanApi {
     if (response.statusCode !== 200) {
       throw new Error(`Unexpected http status ${response.statusCode} while waiting on container: ${response.body.toString()}`);
     }
-    if (response.headers['content-type'] !== 'application/octet-stream') {
-      throw new Error(`Unexpected Content-Type for container log stream: ${response.headers['content-type']}`);
+    if (response.headers['content-type'] !== undefined && response.headers['content-type'] !== 'application/octet-stream') {
+      throw new Error(`Unexpected Content-Type for container log stream: contentType=${response.headers['content-type']}, idOrName=${idOrName}`);
     }
 
     let leftBytes = response.body;
