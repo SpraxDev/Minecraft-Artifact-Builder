@@ -107,6 +107,8 @@ if (argv._.length === 0) {
 
     await podmanApi.buildImage(Path.join(APP_ROOT, 'resources', 'Containerfile'), 'minecraft-artifact-builder:latest', { 'dev.sprax.minecraft-artifact-builder': '1' });
 
+    // TODO: Add Forge
+
     await Promise.all([
       buildAllVersionsOfSomething('spigotmc.org/spigot', 'Spigot', 1, false),
       Async.parallelLimit([
