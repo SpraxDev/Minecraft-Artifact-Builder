@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:24-alpine
 
 RUN apk --no-cache -U upgrade && \
     npm i -g npm --update-notifier false && \
