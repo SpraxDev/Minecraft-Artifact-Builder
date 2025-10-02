@@ -23,7 +23,6 @@
   "scripts": {
     "build": "tsc",
 
-    "test": "jest --coverage",
     "dev": "nodemon src/main.ts app",
 
     "docker:build": "npm run build && docker build --rm --tag minecraft-artifact-builder:dev .",
@@ -40,12 +39,9 @@
   "devDependencies": {
     "@tsconfig/node24": "^24.0.1",
     "@types/async": "^3.2.25",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.6.2",
     "@types/yargs": "^17.0.33",
-    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
-    "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
