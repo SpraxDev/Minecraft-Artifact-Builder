@@ -1,4 +1,5 @@
 import Fs from 'node:fs';
+import Os from 'node:os';
 import Path from 'node:path';
 import ArtifactBuilder from '../ArtifactBuilder.ts';
 import type BuildContext from '../BuildContext.ts';
@@ -7,12 +8,12 @@ import FileDownloader from '../FileDownloader.ts';
 export type ProjectBuild = {
   build: number;
   channel: string;
-  downloads: { [key: string]: { name: string, sha256: string } };
+  downloads: { [key: string]: { name: string, sha256: string, url: string } };
 };
 
 export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactBuilder {
   private readonly VERSION_INPUT_PATTERN = /^\d+(\.\d+){0,2}(-[a-z][a-z0-9]*)?-\d+$/i;
-  protected readonly API_BASE_URL = 'https://api.papermc.io';
+  protected readonly API_BASE_URL = 'https://fill.papermc.io';
 
   abstract getApiProjectName(): string;
 
@@ -70,7 +71,7 @@ export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactB
 
       for (const downloadKey in buildInfo.downloads) {
         const download = buildInfo.downloads[downloadKey];
-        await FileDownloader.downloadFile(`${buildInfoUrl}/downloads/${download.name}`, Path.join(artifactPath, download.name));
+        await FileDownloader.downloadFile(download.url, Path.join(artifactPath, download.name));
       }
     } catch (err) {
       await Fs.promises.rm(artifactPath, { recursive: true });
@@ -103,21 +104,36 @@ export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactB
   }
 
   async fetchProjectVersions(): Promise<string[]> {
-    const response = await fetch(`${this.API_BASE_URL}/v2/projects/${encodeURIComponent(this.getApiProjectName())}`);
+    const response = await this.doFetch(`${this.API_BASE_URL}/v3/projects/${encodeURIComponent(this.getApiProjectName())}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch project info for project ${this.getApiProjectName()}: ${response.status} ${response.statusText}`);
     }
 
-    const versions = (await response.json() as any)['versions'];
-    if (!Array.isArray(versions)) {
-      throw new Error(`Failed to fetch project info for project ${this.getApiProjectName()}: 'versions' is not an array`);
+    const versionsFromApi = (await response.json() as any)['versions'];
+    if (typeof versionsFromApi !== 'object') {
+      throw new Error(`Failed to fetch project info for project ${this.getApiProjectName()}: 'versions' is not an object`);
+    }
+
+    const versions: string[] = [];
+    for (const versionGroup in versionsFromApi) {
+      const versionsInGroup = versionsFromApi[versionGroup];
+      if (!Array.isArray(versionsInGroup)) {
+        throw new Error(`Failed to fetch project info for project ${this.getApiProjectName()}: 'versions' group '${versionGroup}' is not an array`);
+      }
+
+      for (const version of (versionsInGroup as any[])) {
+        if (typeof version !== 'string') {
+          throw new Error(`Failed to fetch project info for project ${this.getApiProjectName()}: 'versions' group '${versionGroup}' contains non-string`);
+        }
+        versions.push(version);
+      }
     }
 
     return versions;
   }
 
   protected async fetchBuild(version: string, build: number): Promise<ProjectBuild | null> {
-    const response = await fetch(this.getBuildInfoUrl(version, build));
+    const response = await this.doFetch(this.getBuildInfoUrl(version, build));
     if (response.status === 404) {
       return null;
     }
@@ -129,12 +145,12 @@ export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactB
   }
 
   protected async fetchAllBuildsForVersion(version: string): Promise<ProjectBuild[]> {
-    const response = await fetch(`${this.API_BASE_URL}/v2/projects/${encodeURIComponent(this.getApiProjectName())}/versions/${encodeURIComponent(version)}/builds`);
+    const response = await this.doFetch(`${this.API_BASE_URL}/v3/projects/${encodeURIComponent(this.getApiProjectName())}/versions/${encodeURIComponent(version)}/builds`);
     if (!response.ok) {
       throw new Error(`Failed to fetch builds for version ${version} of project ${this.getApiProjectName()}: ${response.status} ${response.statusText}`);
     }
 
-    const buildsData = (await response.json() as any)['builds'];
+    const buildsData = (await response.json() as any);
     if (!Array.isArray(buildsData)) {
       throw new Error(`Failed to fetch builds for version ${version} of project ${this.getApiProjectName()}: 'builds' is not an array`);
     }
@@ -151,11 +167,20 @@ export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactB
   }
 
   protected getBuildInfoUrl(version: string, build: number): string {
-    return `${this.API_BASE_URL}/v2/projects/${encodeURIComponent(this.getApiProjectName())}/versions/${encodeURIComponent(version)}/builds/${build}`;
+    return `${this.API_BASE_URL}/v3/projects/${encodeURIComponent(this.getApiProjectName())}/versions/${encodeURIComponent(version)}/builds/${build}`;
+  }
+
+  protected doFetch(url: string): Promise<Response> {
+    const userAgent = `SpraxDev/Minecraft-Artifact-Builder (${Os.type()}; ${process.arch}; ${process.platform}) (+https://github.com/SpraxDev/Minecraft-Artifact-Builder)`;
+    return fetch(url, {
+      headers: {
+        'User-Agent': userAgent,
+      },
+    });
   }
 
   private parseProjectBuild(apiData: any): ProjectBuild {
-    const build = apiData['build'];
+    const build = apiData['id'];
     if (typeof build !== 'number') {
       throw new Error(`Error parsing project build: 'build' is not a number`);
     }
@@ -174,11 +199,30 @@ export default abstract class AbstractPaperMcIoArtifactBuilder extends ArtifactB
       if (typeof download['name'] !== 'string') {
         throw new Error(`Error parsing project build: 'downloads' contains non-string name`);
       }
-      if (typeof download['sha256'] !== 'string') {
+      if (typeof download['url'] !== 'string') {
+        throw new Error(`Error parsing project build: 'downloads' contains non-string url`);
+      }
+      if (typeof download['checksums'] !== 'object') {
+        throw new Error(`Error parsing project build: 'downloads' contains non-object checksums`);
+      }
+      if (typeof download['checksums']['sha256'] !== 'string') {
         throw new Error(`Error parsing project build: 'downloads' contains non-string sha256`);
       }
     }
 
-    return { build, channel, downloads };
+    return {
+      build,
+      channel,
+      downloads: {
+        ...Object.fromEntries(Object.entries(downloads).map(([key, download]) => [
+          key,
+          {
+            name: (download as any)['name'],
+            sha256: (download as any)['checksums']['sha256'],
+            url: (download as any)['url'],
+          },
+        ])),
+      }
+    };
   }
 }
