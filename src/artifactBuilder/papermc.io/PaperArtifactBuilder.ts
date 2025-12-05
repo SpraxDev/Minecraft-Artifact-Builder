@@ -7,6 +7,8 @@ export default class PaperArtifactBuilder extends AbstractPaperMcIoArtifactBuild
 
     // API returns status 404
     '1.21.9-rc1',
+    '1.21.11-rc1',
+    '1.21.11-rc2',
   ];
 
   getApiProjectName(): string {
